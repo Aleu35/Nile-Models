@@ -3,9 +3,6 @@
   "outputDirectory": "dist",
   "framework": null,
   "functions": {
-    "app/**": {
-      "runtime": "nodejs18.x"
-    }
   },
   "rewrites": [
     {
