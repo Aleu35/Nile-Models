@@ -1,8 +1,7 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LogOut, Users, FileText, Settings, Inbox, Image, Navigation, Shield, Database } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import ModelsManager from '@/components/admin/ModelsManager';
@@ -15,15 +14,13 @@ import ContentManager from '@/components/admin/ContentManager';
 import SecurityManager from '@/components/admin/SecurityManager';
 import DatabaseManager from '@/components/admin/DatabaseManager';
 
+// A simplified layout to debug the CSS loading issue.
 const Admin = () => {
   const { user, isAdmin, signOut, isLoading } = useAuth();
+  const [activeTab, setActiveTab] = React.useState('models');
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-        <div className="text-white text-xl">Loading...</div>
-      </div>
-    );
+    return <div className="bg-gray-900 text-white min-h-screen p-8">Loading Admin Panel...</div>;
   }
 
   if (!user) {
@@ -32,88 +29,78 @@ const Admin = () => {
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
-        <Card className="bg-slate-900 border-slate-800">
+      <div className="bg-gray-900 text-white min-h-screen p-8">
+        <Card className="bg-gray-800 border-gray-700">
           <CardHeader>
-            <CardTitle className="text-white text-center">Access Denied</CardTitle>
+            <CardTitle>Access Denied</CardTitle>
           </CardHeader>
-          <CardContent className="text-center">
-            <p className="text-slate-400 mb-4">
-              You don't have admin permissions to access this area.
-            </p>
-            <Button onClick={signOut} variant="outline" className="border-slate-700 hover:bg-slate-800">
-              Sign Out
-            </Button>
+          <CardContent>
+            <p className="text-gray-400 mb-4">You do not have permission to view this page.</p>
+            <Button onClick={signOut} variant="outline">Sign Out</Button>
           </CardContent>
         </Card>
       </div>
     );
   }
 
-  const NavButton = ({ value, children }: { value: string; children: React.ReactNode }) => (
-    <TabsTrigger value={value} asChild>
-      <Button
-        variant="ghost"
-        className="w-full justify-start text-base font-normal text-slate-400 hover:bg-slate-800 hover:text-white data-[state=active]:bg-blue-600 data-[state=active]:text-white"
-      >
-        <div className="flex items-center truncate">
-          {children}
-        </div>
-      </Button>
-    </TabsTrigger>
-  );
+  const renderContent = () => {
+    switch(activeTab) {
+      case 'models': return <ModelsManager />;
+      case 'applications': return <ApplicationsManager />;
+      case 'news': return <NewsManager />;
+      case 'content': return <ContentManager />;
+      case 'navigation': return <NavigationManager />;
+      case 'media': return <MediaManager />;
+      case 'settings': return <SiteSettingsManager />;
+      case 'security': return <SecurityManager />;
+      case 'database': return <DatabaseManager />;
+      default: return <ModelsManager />;
+    }
+  };
+  
+  const navItems = [
+    { key: 'models', label: 'Models', icon: Users },
+    { key: 'applications', label: 'Applications', icon: Inbox },
+    { key: 'news', label: 'News & Blog', icon: FileText },
+    { key: 'content', label: 'Page Content', icon: FileText },
+    { key: 'navigation', label: 'Navigation', icon: Navigation },
+    { key: 'media', label: 'Media', icon: Image },
+    { key: 'settings', label: 'Site Settings', icon: Settings },
+    { key: 'security', label: 'Security', icon: Shield },
+    { key: 'database', label: 'Database', icon: Database },
+  ];
 
   return (
-    <Tabs defaultValue="models" orientation="vertical" className="min-h-screen">
-      <div className="flex min-h-screen bg-slate-950 text-slate-100">
-        <aside className="w-64 border-r border-slate-800 bg-slate-900 p-4 flex-shrink-0 flex flex-col">
-          <div className="mb-8 px-2">
-            <h1 className="text-2xl font-bold text-white">NILES Admin</h1>
-          </div>
-          <TabsList className="flex flex-col items-stretch w-full space-y-1">
-            <NavButton value="models"><Users className="h-5 w-5 mr-3 flex-shrink-0" /> Models</NavButton>
-            <NavButton value="applications"><Inbox className="h-5 w-5 mr-3 flex-shrink-0" /> Applications</NavButton>
-            <NavButton value="news"><FileText className="h-5 w-5 mr-3 flex-shrink-0" /> News & Blog</NavButton>
-            <NavButton value="content"><FileText className="h-5 w-5 mr-3 flex-shrink-0" /> Page Content</NavButton>
-            <NavButton value="navigation"><Navigation className="h-5 w-5 mr-3 flex-shrink-0" /> Navigation</NavButton>
-            <NavButton value="media"><Image className="h-5 w-5 mr-3 flex-shrink-0" /> Media</NavButton>
-            <NavButton value="settings"><Settings className="h-5 w-5 mr-3 flex-shrink-0" /> Site Settings</NavButton>
-            <NavButton value="security"><Shield className="h-5 w-5 mr-3 flex-shrink-0" /> Security</NavButton>
-            <NavButton value="database"><Database className="h-5 w-5 mr-3 flex-shrink-0" /> Database</NavButton>
-          </TabsList>
-          <div className="mt-auto pt-4">
-            <Button
-              onClick={signOut}
-              variant="outline"
-              className="w-full justify-center border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white"
-            >
-              <LogOut className="h-5 w-5 mr-3" />
-              Sign Out
-            </Button>
-          </div>
-        </aside>
+    <div className="min-h-screen bg-gray-900 text-white">
+      <header className="bg-gray-800 p-4 flex justify-between items-center border-b border-gray-700">
+        <h1 className="text-xl font-bold">NILES Admin</h1>
+        <div>
+          <span className="mr-4 text-sm text-gray-400">Welcome, {user.email}</span>
+          <Button onClick={signOut} variant="outline" size="sm" className="border-gray-600 hover:bg-gray-700">
+            <LogOut className="h-4 w-4 mr-2" />
+            Sign Out
+          </Button>
+        </div>
+      </header>
+      
+      <div className="p-4 md:p-8">
+        <div className="flex flex-wrap gap-2 border-b border-gray-700 pb-4 mb-4">
+          {navItems.map(item => {
+            const Icon = item.icon;
+            return (
+              <Button key={item.key} onClick={() => setActiveTab(item.key)} variant={activeTab === item.key ? 'secondary' : 'ghost'}>
+                <Icon className="mr-2 h-4 w-4" />
+                {item.label}
+              </Button>
+            );
+          })}
+        </div>
 
-        <div className="flex-grow">
-          <header className="bg-slate-900/60 backdrop-blur-sm border-b border-slate-800 px-8 py-4 sticky top-0 z-10">
-            <div className="flex items-center justify-end">
-              <span className="text-slate-400">Welcome, {user.email}</span>
-            </div>
-          </header>
-
-          <main className="p-8">
-            <TabsContent value="models"><Card className="bg-slate-900 border-slate-800"><CardHeader><CardTitle>Models Management</CardTitle><CardDescription>Add, edit, and manage model profiles.</CardDescription></CardHeader><CardContent><ModelsManager /></CardContent></Card></TabsContent>
-            <TabsContent value="applications"><Card className="bg-slate-900 border-slate-800"><CardHeader><CardTitle>Applications</CardTitle><CardDescription>Review new model applications.</CardDescription></CardHeader><CardContent><ApplicationsManager /></CardContent></Card></TabsContent>
-            <TabsContent value="news"><Card className="bg-slate-900 border-slate-800"><CardHeader><CardTitle>News & Blog</CardTitle><CardDescription>Create and manage news articles and blog posts.</CardDescription></CardHeader><CardContent><NewsManager /></CardContent></Card></TabsContent>
-            <TabsContent value="content"><Card className="bg-slate-900 border-slate-800"><CardHeader><CardTitle>Page Content</CardTitle><CardDescription>Edit content on static pages like "About" or "Contact".</CardDescription></CardHeader><CardContent><ContentManager /></CardContent></Card></TabsContent>
-            <TabsContent value="navigation"><Card className="bg-slate-900 border-slate-800"><CardHeader><CardTitle>Navigation</CardTitle><CardDescription>Manage your website's navigation menus.</CardDescription></CardHeader><CardContent><NavigationManager /></CardContent></Card></TabsContent>
-            <TabsContent value="media"><Card className="bg-slate-900 border-slate-800"><CardHeader><CardTitle>Media Library</CardTitle><CardDescription>Upload and manage all site images and videos.</CardDescription></CardHeader><CardContent><MediaManager /></CardContent></Card></TabsContent>
-            <TabsContent value="settings"><Card className="bg-slate-900 border-slate-800"><CardHeader><CardTitle>Site Settings</CardTitle><CardDescription>Manage global site settings and configurations.</CardDescription></CardHeader><CardContent><SiteSettingsManager /></CardContent></Card></TabsContent>
-            <TabsContent value="security"><Card className="bg-slate-900 border-slate-800"><CardHeader><CardTitle>Security</CardTitle><CardDescription>Monitor site security and manage admin access.</CardDescription></CardHeader><CardContent><SecurityManager /></CardContent></Card></TabsContent>
-            <TabsContent value="database"><Card className="bg-slate-900 border-slate-800"><CardHeader><CardTitle>Database Management</CardTitle><CardDescription>View and manage raw database tables.</CardDescription></CardHeader><CardContent><DatabaseManager /></CardContent></Card></TabsContent>
-          </main>
+        <div className="mt-6">
+          {renderContent()}
         </div>
       </div>
-    </Tabs>
+    </div>
   );
 };
 
