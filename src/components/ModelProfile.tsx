@@ -37,10 +37,10 @@ const ModelProfile: React.FC<ModelProfileProps> = ({ model, onClose }) => {
     model.portfolio_images.length > 0;
   
   const socialLinks = [
-    { name: 'Instagram', url: model.instagram_url, icon: Instagram },
-    { name: 'Facebook', url: model.facebook_url, icon: Facebook },
-    { name: 'Twitter', url: model.twitter_url, icon: Twitter },
-    { name: 'TikTok', url: model.tiktok_url, icon: TikTokIcon },
+    { name: 'Instagram', url: model.social_instagram, icon: Instagram },
+    { name: 'Facebook',  url: model.social_facebook,  icon: Facebook  },
+    { name: 'Twitter',   url: model.social_twitter,   icon: Twitter   },
+    { name: 'TikTok',    url: model.social_tiktok,    icon: TikTokIcon },
   ].filter(link => link.url); // Filter out links that don't have a URL
 
   return (
