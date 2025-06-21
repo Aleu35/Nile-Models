@@ -1,7 +1,25 @@
 import React, { useState } from 'react';
-import { X } from 'lucide-react';
+import { X, Instagram, Facebook, Twitter } from 'lucide-react';
 import { Model } from '@/hooks/useModels';
 import { Button } from '@/components/ui/button';
+
+// A simple TikTok icon component as it's not in lucide-react by default
+const TikTokIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    <path d="M16.14 8.35a4.14 4.14 0 0 1-4.14 4.14V16a8 8 0 1 0-8-8V2.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v13.09a4.14 4.14 0 1 1-4.14-4.14" />
+  </svg>
+);
 
 interface ModelProfileProps {
   model: Model;
@@ -18,6 +36,13 @@ const ModelProfile: React.FC<ModelProfileProps> = ({ model, onClose }) => {
     Array.isArray(model.portfolio_images) && 
     model.portfolio_images.length > 0;
   
+  const socialLinks = [
+    { name: 'Instagram', url: model.instagram_url, icon: Instagram },
+    { name: 'Facebook', url: model.facebook_url, icon: Facebook },
+    { name: 'Twitter', url: model.twitter_url, icon: Twitter },
+    { name: 'TikTok', url: model.tiktok_url, icon: TikTokIcon },
+  ].filter(link => link.url); // Filter out links that don't have a URL
+
   return (
     <>
       <div className="fixed inset-0 z-50 bg-black">
@@ -62,6 +87,27 @@ const ModelProfile: React.FC<ModelProfileProps> = ({ model, onClose }) => {
                     {model.name}
                   </h1>
                 </div>
+                
+                {/* Social Media Icons */}
+                {socialLinks.length > 0 && (
+                  <div className="flex items-center space-x-4">
+                    {socialLinks.map(social => {
+                      const Icon = social.icon;
+                      return (
+                        <a 
+                          key={social.name}
+                          href={social.url!}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={`${model.name}'s ${social.name}`}
+                          className="text-gray-400 hover:text-white transition-colors duration-200"
+                        >
+                          <Icon className="h-6 w-6" />
+                        </a>
+                      );
+                    })}
+                  </div>
+                )}
                 
                 {/* Bio content */}
                 {model.bio && (
