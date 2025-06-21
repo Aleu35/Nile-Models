@@ -1,9 +1,9 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { LogOut, Users, FileText, Settings, Upload, Inbox, Image, Navigation, Video, Shield, Database } from 'lucide-react';
+import { LogOut, Users, FileText, Settings, Inbox, Image, Navigation, Shield, Database } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import ModelsManager from '@/components/admin/ModelsManager';
 import NewsManager from '@/components/admin/NewsManager';
@@ -20,7 +20,7 @@ const Admin = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
         <div className="text-white text-xl">Loading...</div>
       </div>
     );
@@ -32,16 +32,16 @@ const Admin = () => {
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center p-4">
-        <Card className="bg-gray-900 border-gray-800">
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
+        <Card className="bg-slate-900 border-slate-800">
           <CardHeader>
             <CardTitle className="text-white text-center">Access Denied</CardTitle>
           </CardHeader>
           <CardContent className="text-center">
-            <p className="text-gray-400 mb-4">
+            <p className="text-slate-400 mb-4">
               You don't have admin permissions to access this area.
             </p>
-            <Button onClick={signOut} variant="outline">
+            <Button onClick={signOut} variant="outline" className="border-slate-700 hover:bg-slate-800">
               Sign Out
             </Button>
           </CardContent>
@@ -50,75 +50,42 @@ const Admin = () => {
     );
   }
 
+  const NavButton = ({ value, children }: { value: string; children: React.ReactNode }) => (
+    <TabsTrigger value={value} asChild>
+      <Button
+        variant="ghost"
+        className="w-full justify-start text-base font-normal text-slate-400 hover:bg-slate-800 hover:text-white data-[state=active]:bg-blue-600 data-[state=active]:text-white"
+      >
+        <div className="flex items-center truncate">
+          {children}
+        </div>
+      </Button>
+    </TabsTrigger>
+  );
+
   return (
     <Tabs defaultValue="models" orientation="vertical" className="min-h-screen">
-      <div className="flex min-h-screen bg-gray-900 text-gray-100">
-        {/* Vertical Navigation Sidebar */}
-        <aside className="w-64 border-r border-gray-800 p-4 flex-shrink-0 flex flex-col">
-          <div className="mb-8">
-            <h1 className="text-2xl font-bold text-white text-center">NILES Admin</h1>
+      <div className="flex min-h-screen bg-slate-950 text-slate-100">
+        <aside className="w-64 border-r border-slate-800 bg-slate-900 p-4 flex-shrink-0 flex flex-col">
+          <div className="mb-8 px-2">
+            <h1 className="text-2xl font-bold text-white">NILES Admin</h1>
           </div>
           <TabsList className="flex flex-col items-stretch w-full space-y-1">
-            <TabsTrigger value="models" asChild>
-              <Button variant="ghost" className="w-full justify-start text-base font-normal data-[state=active]:bg-gray-700 data-[state=active]:text-white">
-                <Users className="h-5 w-5 mr-3" />
-                Models
-              </Button>
-            </TabsTrigger>
-            <TabsTrigger value="applications" asChild>
-              <Button variant="ghost" className="w-full justify-start text-base font-normal data-[state=active]:bg-gray-700 data-[state=active]:text-white">
-                <Inbox className="h-5 w-5 mr-3" />
-                Applications
-              </Button>
-            </TabsTrigger>
-            <TabsTrigger value="news" asChild>
-              <Button variant="ghost" className="w-full justify-start text-base font-normal data-[state=active]:bg-gray-700 data-[state=active]:text-white">
-                <FileText className="h-5 w-5 mr-3" />
-                News & Blog
-              </Button>
-            </TabsTrigger>
-            <TabsTrigger value="content" asChild>
-              <Button variant="ghost" className="w-full justify-start text-base font-normal data-[state=active]:bg-gray-700 data-[state=active]:text-white">
-                <FileText className="h-5 w-5 mr-3" />
-                Page Content
-              </Button>
-            </TabsTrigger>
-            <TabsTrigger value="navigation" asChild>
-              <Button variant="ghost" className="w-full justify-start text-base font-normal data-[state=active]:bg-gray-700 data-[state=active]:text-white">
-                <Navigation className="h-5 w-5 mr-3" />
-                Navigation
-              </Button>
-            </TabsTrigger>
-            <TabsTrigger value="media" asChild>
-              <Button variant="ghost" className="w-full justify-start text-base font-normal data-[state=active]:bg-gray-700 data-[state=active]:text-white">
-                <Image className="h-5 w-5 mr-3" />
-                Media
-              </Button>
-            </TabsTrigger>
-            <TabsTrigger value="settings" asChild>
-              <Button variant="ghost" className="w-full justify-start text-base font-normal data-[state=active]:bg-gray-700 data-[state=active]:text-white">
-                <Settings className="h-5 w-5 mr-3" />
-                Site Settings
-              </Button>
-            </TabsTrigger>
-            <TabsTrigger value="security" asChild>
-              <Button variant="ghost" className="w-full justify-start text-base font-normal data-[state=active]:bg-gray-700 data-[state=active]:text-white">
-                <Shield className="h-5 w-5 mr-3" />
-                Security
-              </Button>
-            </TabsTrigger>
-            <TabsTrigger value="database" asChild>
-              <Button variant="ghost" className="w-full justify-start text-base font-normal data-[state=active]:bg-gray-700 data-[state=active]:text-white">
-                <Database className="h-5 w-5 mr-3" />
-                Database
-              </Button>
-            </TabsTrigger>
+            <NavButton value="models"><Users className="h-5 w-5 mr-3 flex-shrink-0" /> Models</NavButton>
+            <NavButton value="applications"><Inbox className="h-5 w-5 mr-3 flex-shrink-0" /> Applications</NavButton>
+            <NavButton value="news"><FileText className="h-5 w-5 mr-3 flex-shrink-0" /> News & Blog</NavButton>
+            <NavButton value="content"><FileText className="h-5 w-5 mr-3 flex-shrink-0" /> Page Content</NavButton>
+            <NavButton value="navigation"><Navigation className="h-5 w-5 mr-3 flex-shrink-0" /> Navigation</NavButton>
+            <NavButton value="media"><Image className="h-5 w-5 mr-3 flex-shrink-0" /> Media</NavButton>
+            <NavButton value="settings"><Settings className="h-5 w-5 mr-3 flex-shrink-0" /> Site Settings</NavButton>
+            <NavButton value="security"><Shield className="h-5 w-5 mr-3 flex-shrink-0" /> Security</NavButton>
+            <NavButton value="database"><Database className="h-5 w-5 mr-3 flex-shrink-0" /> Database</NavButton>
           </TabsList>
           <div className="mt-auto pt-4">
             <Button
               onClick={signOut}
               variant="outline"
-              className="w-full justify-center border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-white"
+              className="w-full justify-center border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white"
             >
               <LogOut className="h-5 w-5 mr-3" />
               Sign Out
@@ -126,42 +93,23 @@ const Admin = () => {
           </div>
         </aside>
 
-        {/* Main Content Area */}
         <div className="flex-grow">
-          <header className="bg-gray-900/50 backdrop-blur-sm border-b border-gray-800 px-8 py-4 sticky top-0 z-10">
+          <header className="bg-slate-900/60 backdrop-blur-sm border-b border-slate-800 px-8 py-4 sticky top-0 z-10">
             <div className="flex items-center justify-end">
-              <span className="text-gray-400">Welcome, {user.email}</span>
+              <span className="text-slate-400">Welcome, {user.email}</span>
             </div>
           </header>
 
           <main className="p-8">
-            <TabsContent value="models" className="mt-0">
-              <ModelsManager />
-            </TabsContent>
-            <TabsContent value="applications" className="mt-0">
-              <ApplicationsManager />
-            </TabsContent>
-            <TabsContent value="news" className="mt-0">
-              <NewsManager />
-            </TabsContent>
-            <TabsContent value="content" className="mt-0">
-              <ContentManager />
-            </TabsContent>
-            <TabsContent value="navigation" className="mt-0">
-              <NavigationManager />
-            </TabsContent>
-            <TabsContent value="media" className="mt-0">
-              <MediaManager />
-            </TabsContent>
-            <TabsContent value="settings" className="mt-0">
-              <SiteSettingsManager />
-            </TabsContent>
-            <TabsContent value="security" className="mt-0">
-              <SecurityManager />
-            </TabsContent>
-            <TabsContent value="database" className="mt-0">
-              <DatabaseManager />
-            </TabsContent>
+            <TabsContent value="models"><Card className="bg-slate-900 border-slate-800"><CardHeader><CardTitle>Models Management</CardTitle><CardDescription>Add, edit, and manage model profiles.</CardDescription></CardHeader><CardContent><ModelsManager /></CardContent></Card></TabsContent>
+            <TabsContent value="applications"><Card className="bg-slate-900 border-slate-800"><CardHeader><CardTitle>Applications</CardTitle><CardDescription>Review new model applications.</CardDescription></CardHeader><CardContent><ApplicationsManager /></CardContent></Card></TabsContent>
+            <TabsContent value="news"><Card className="bg-slate-900 border-slate-800"><CardHeader><CardTitle>News & Blog</CardTitle><CardDescription>Create and manage news articles and blog posts.</CardDescription></CardHeader><CardContent><NewsManager /></CardContent></Card></TabsContent>
+            <TabsContent value="content"><Card className="bg-slate-900 border-slate-800"><CardHeader><CardTitle>Page Content</CardTitle><CardDescription>Edit content on static pages like "About" or "Contact".</CardDescription></CardHeader><CardContent><ContentManager /></CardContent></Card></TabsContent>
+            <TabsContent value="navigation"><Card className="bg-slate-900 border-slate-800"><CardHeader><CardTitle>Navigation</CardTitle><CardDescription>Manage your website's navigation menus.</CardDescription></CardHeader><CardContent><NavigationManager /></CardContent></Card></TabsContent>
+            <TabsContent value="media"><Card className="bg-slate-900 border-slate-800"><CardHeader><CardTitle>Media Library</CardTitle><CardDescription>Upload and manage all site images and videos.</CardDescription></CardHeader><CardContent><MediaManager /></CardContent></Card></TabsContent>
+            <TabsContent value="settings"><Card className="bg-slate-900 border-slate-800"><CardHeader><CardTitle>Site Settings</CardTitle><CardDescription>Manage global site settings and configurations.</CardDescription></CardHeader><CardContent><SiteSettingsManager /></CardContent></Card></TabsContent>
+            <TabsContent value="security"><Card className="bg-slate-900 border-slate-800"><CardHeader><CardTitle>Security</CardTitle><CardDescription>Monitor site security and manage admin access.</CardDescription></CardHeader><CardContent><SecurityManager /></CardContent></Card></TabsContent>
+            <TabsContent value="database"><Card className="bg-slate-900 border-slate-800"><CardHeader><CardTitle>Database Management</CardTitle><CardDescription>View and manage raw database tables.</CardDescription></CardHeader><CardContent><DatabaseManager /></CardContent></Card></TabsContent>
           </main>
         </div>
       </div>
