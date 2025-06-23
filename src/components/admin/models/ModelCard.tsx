@@ -1,13 +1,22 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Edit, Trash2 } from 'lucide-react';
 
+interface Model {
+  id: string;
+  name: string;
+  category: string;
+  bio?: string;
+  is_featured?: boolean;
+  profile_image_url?: string;
+  portfolio_images?: string[];
+}
+
 interface ModelCardProps {
-  model: any;
-  onEdit: (model: any) => void;
+  model: Model;
+  onEdit: (model: Model) => void;
   onDelete: (modelId: string) => void;
 }
 

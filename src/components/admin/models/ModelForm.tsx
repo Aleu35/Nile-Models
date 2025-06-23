@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,9 +6,19 @@ import { BasicInfoSection } from './components/BasicInfoSection';
 import { MediaUploadSection } from './components/MediaUploadSection';
 import { SocialMediaSection } from './components/SocialMediaSection';
 
+interface Model {
+  id: string;
+  name: string;
+  category: string;
+  bio?: string;
+  is_featured?: boolean;
+  profile_image_url?: string;
+  portfolio_images?: string[];
+}
+
 interface ModelFormProps {
   isOpen: boolean;
-  editingModel: any;
+  editingModel: Model | null;
   formData: ModelFormData;
   onFormDataChange: (data: ModelFormData) => void;
   onSubmit: (e: React.FormEvent) => Promise<void>;

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useMemo } from 'react';
 import { useModels } from '@/hooks/useModels';
 import { X, Search } from 'lucide-react';
@@ -8,6 +7,13 @@ import { Input } from '@/components/ui/input';
 interface SearchOverlayProps {
   isOpen: boolean;
   onClose: () => void;
+}
+
+interface Model {
+  id: string;
+  name: string;
+  category?: string;
+  profile_image_url?: string;
 }
 
 const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose }) => {
@@ -32,7 +38,7 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose }) => {
   }, [isOpen]);
 
   // Handle model selection
-  const handleModelClick = (model: any) => {
+  const handleModelClick = (model: Model) => {
     // Navigate to the appropriate category page and close overlay
     const category = model.category || 'men'; // Default to men if no category
     navigate(`/${category}`);

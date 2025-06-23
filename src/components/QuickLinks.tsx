@@ -1,8 +1,12 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { useModels } from '@/hooks/useModels';
+
+interface Model {
+  is_featured?: boolean;
+  profile_image_url?: string;
+}
 
 const QuickLinks: React.FC = () => {
   const { data: menModels } = useModels('men');
@@ -11,7 +15,7 @@ const QuickLinks: React.FC = () => {
   const { data: talentModels } = useModels('talent');
 
   // Get featured image for each category or fallback to placeholder
-  const getImageForCategory = (models: any[], fallback: string) => {
+  const getImageForCategory = (models: Model[] | undefined, fallback: string) => {
     const featuredModel = models?.find(model => model.is_featured);
     return featuredModel?.profile_image_url || models?.[0]?.profile_image_url || fallback;
   };

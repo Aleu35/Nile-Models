@@ -1,59 +1,35 @@
-
 import { z } from 'zod';
 
 // Application form validation schema
 export const applicationSchema = z.object({
-  name: z.string()
-    .min(2, 'Name must be at least 2 characters')
-    .max(100, 'Name must be less than 100 characters')
-    .regex(/^[a-zA-Z\s'-]+$/, 'Name can only contain letters, spaces, hyphens, and apostrophes'),
-  
-  email: z.string()
-    .email('Please enter a valid email address')
-    .max(100, 'Email must be less than 100 characters')
-    .toLowerCase(),
-  
-  phone: z.string()
-    .min(8, 'Phone number must be at least 8 characters')
-    .max(20, 'Phone number must be less than 20 characters')
-    .regex(/^[\d\s\-\+\(\)]+$/, 'Phone number contains invalid characters')
-    .optional()
-    .or(z.literal('')),
-  
-  age: z.number()
-    .min(18, 'Must be at least 18 years old')
-    .max(100, 'Age must be less than 100')
-    .optional(),
-  
-  height: z.number()
-    .min(140, 'Height must be at least 140cm')
-    .max(220, 'Height must be less than 220cm')
-    .optional(),
-  
-  weight: z.number()
-    .min(40, 'Weight must be at least 40kg')
-    .max(200, 'Weight must be less than 200kg')
-    .optional(),
-  
-  measurements: z.string()
-    .max(50, 'Measurements must be less than 50 characters')
-    .regex(/^[\d\s\-\/\.]*$/, 'Measurements can only contain numbers, spaces, hyphens, slashes, and periods')
-    .optional()
-    .or(z.literal('')),
-  
-  experience: z.string()
-    .max(1000, 'Experience must be less than 1000 characters')
-    .optional()
-    .or(z.literal('')),
-  
-  portfolio_urls: z.array(
-    z.string().url('Please enter valid URLs')
-  ).max(10, 'Maximum 10 portfolio URLs allowed').optional(),
-  
-  additional_info: z.string()
-    .max(2000, 'Additional information must be less than 2000 characters')
-    .optional()
-    .or(z.literal(''))
+  firstName:  z.string().min(1),
+  lastName:   z.string().min(1),
+  gender:     z.string().min(1),
+  dob:        z.string().min(1),
+  city:       z.string().min(1),
+  state:      z.string().min(1),
+  country:    z.string().min(1),
+  email:      z.string().email(),
+  phone:      z.string().min(5),
+  instagram:  z.string().url().optional(),
+  tiktok:     z.string().url().optional(),
+  facebook:   z.string().url().optional(),
+  twitter:    z.string().url().optional(),
+  height:     z.string().min(1),
+  chest:      z.string().min(1),
+  waist:      z.string().min(1),
+  hips:       z.string().min(1),
+  shoes:      z.string().min(1),
+  inseam:     z.string().min(1),
+  hair:       z.string().min(1),
+  eyes:       z.string().min(1),
+  ethnicity:  z.string().min(1),
+  bio:        z.string().min(10),
+  files:      z.array(z.any()).min(4).max(8),
+  portfolio_urls: z.array(z.string()).optional(),
+  measurements: z.string().optional(),
+  experience: z.string().optional(),
+  additional_info: z.string().optional(),
 });
 
 export type ApplicationFormData = z.infer<typeof applicationSchema>;

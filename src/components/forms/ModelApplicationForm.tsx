@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,6 +9,15 @@ import { Label } from '@/components/ui/label';
 import { Loader2, AlertTriangle, CheckCircle, Shield } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { applicationSchema, type ApplicationFormData, sanitizeInput, generateCSRFToken } from '@/lib/validation';
+import { InputField, SelectField, DateField, CountryField, TextArea, FileInput, SubmitButton } from '@/components/forms/FormComponents';
+import {
+  Input as UiInput,
+  Select as UiSelect,
+  DateInput as UiDateInput,
+  CountrySelect as UiCountrySelect,
+  Textarea as UiTextarea,
+  FileUpload,
+} from '@/components/forms/FormComponents';
 
 const ModelApplicationForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -88,13 +96,40 @@ const ModelApplicationForm: React.FC = () => {
 
       console.log('Submitting application with data:', sanitizedData);
 
+      const body = {
+        first_name : data.firstName,
+        last_name  : data.lastName,
+        gender     : data.gender,
+        dob        : data.dob,
+        city       : data.city,
+        state      : data.state,
+        country    : data.country,
+        email      : data.email,
+        phone      : data.phone,
+        instagram  : data.instagram,
+        tiktok     : data.tiktok,
+        facebook   : data.facebook,
+        twitter    : data.twitter,
+        height     : data.height,
+        chest      : data.chest,
+        waist      : data.waist,
+        hips       : data.hips,
+        shoes      : data.shoes,
+        inseam     : data.inseam,
+        hair       : data.hair,
+        eyes       : data.eyes,
+        ethnicity  : data.ethnicity,
+        bio        : data.bio,
+        digitals   : data.portfolio_urls,
+      };
+
       const response = await fetch('/api/submit-application', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'X-CSRF-Token': csrfToken,
         },
-        body: JSON.stringify(sanitizedData),
+        body: JSON.stringify(body),
       });
 
       const result = await response.json();
@@ -108,9 +143,8 @@ const ModelApplicationForm: React.FC = () => {
       setPortfolioUrls(['']);
       
       toast({
-        title: "Application Submitted Successfully!",
-        description: "Thank you for your application. We'll review it and get back to you soon.",
-        variant: "default",
+        title: "Application Submitted",
+        description: "Application received – we'll be in touch 👋",
       });
 
       // Generate new CSRF token for next submission
@@ -169,252 +203,48 @@ const ModelApplicationForm: React.FC = () => {
       </CardHeader>
       
       <CardContent className="space-y-6">
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          {/* Personal Information */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-light text-white border-b border-gray-700 pb-2">
-              Personal Information
-            </h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="name" className="text-gray-300">Full Name *</Label>
-                <Input
-                  id="name"
-                  {...register('name')}
-                  className="bg-gray-800 border-gray-600 text-white focus:border-blue-500"
-                  placeholder="Enter your full name"
-                  maxLength={100}
-                />
-                {errors.name && (
-                  <p className="text-red-400 text-sm mt-1 flex items-center gap-1">
-                    <AlertTriangle className="h-3 w-3" />
-                    {errors.name.message}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <Label htmlFor="email" className="text-gray-300">Email Address *</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  {...register('email')}
-                  className="bg-gray-800 border-gray-600 text-white focus:border-blue-500"
-                  placeholder="your.email@example.com"
-                  maxLength={100}
-                />
-                {errors.email && (
-                  <p className="text-red-400 text-sm mt-1 flex items-center gap-1">
-                    <AlertTriangle className="h-3 w-3" />
-                    {errors.email.message}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="phone" className="text-gray-300">Phone Number</Label>
-                <Input
-                  id="phone"
-                  type="tel"
-                  {...register('phone')}
-                  className="bg-gray-800 border-gray-600 text-white focus:border-blue-500"
-                  placeholder="+1 (555) 123-4567"
-                  maxLength={20}
-                />
-                {errors.phone && (
-                  <p className="text-red-400 text-sm mt-1 flex items-center gap-1">
-                    <AlertTriangle className="h-3 w-3" />
-                    {errors.phone.message}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <Label htmlFor="age" className="text-gray-300">Age *</Label>
-                <Input
-                  id="age"
-                  type="number"
-                  {...register('age', { valueAsNumber: true })}
-                  className="bg-gray-800 border-gray-600 text-white focus:border-blue-500"
-                  placeholder="18"
-                  min="18"
-                  max="100"
-                />
-                {errors.age && (
-                  <p className="text-red-400 text-sm mt-1 flex items-center gap-1">
-                    <AlertTriangle className="h-3 w-3" />
-                    {errors.age.message}
-                  </p>
-                )}
-              </div>
-            </div>
+        <hr className="border-t border-gray-700" />
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="grid gap-6 md:grid-cols-2 md:gap-x-8 bg-black text-white space-y-12"
+        >
+          {/* ---------- LEFT COLUMN ---------- */}
+          <div className="space-y-6">
+            <InputField name="firstName"  label="FIRST NAME"   required />
+            <InputField name="lastName"   label="LAST NAME"    required />
+            <SelectField name="gender"    label="GENDER"       required
+              options={['Female','Male','Non-binary','Prefer not to say']} />
+            <DateField   name="dob"       label="DATE OF BIRTH" required />
+            <InputField name="city"       label="CITY"         required />
+            <InputField name="state"      label="STATE / PROVINCE / REGION" required />
+            <CountryField name="country"  label="COUNTRY"      required />
+            <InputField name="email"      label="E-MAIL ADDRESS" required />
+            <InputField name="phone"      label="PHONE"        required />
+            <InputField name="instagram"  label="INSTAGRAM"    />
+            <InputField name="tiktok"     label="TIKTOK"       />
+            <InputField name="facebook"   label="FACEBOOK"     />
+            <InputField name="twitter"    label="X"            />
           </div>
 
-          {/* Physical Attributes */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-light text-white border-b border-gray-700 pb-2">
-              Physical Attributes
-            </h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <Label htmlFor="height" className="text-gray-300">Height (cm)</Label>
-                <Input
-                  id="height"
-                  type="number"
-                  {...register('height', { valueAsNumber: true })}
-                  className="bg-gray-800 border-gray-600 text-white focus:border-blue-500"
-                  placeholder="175"
-                  min="140"
-                  max="220"
-                />
-                {errors.height && (
-                  <p className="text-red-400 text-sm mt-1 flex items-center gap-1">
-                    <AlertTriangle className="h-3 w-3" />
-                    {errors.height.message}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <Label htmlFor="weight" className="text-gray-300">Weight (kg)</Label>
-                <Input
-                  id="weight"
-                  type="number"
-                  {...register('weight', { valueAsNumber: true })}
-                  className="bg-gray-800 border-gray-600 text-white focus:border-blue-500"
-                  placeholder="65"
-                  min="40"
-                  max="200"
-                />
-                {errors.weight && (
-                  <p className="text-red-400 text-sm mt-1 flex items-center gap-1">
-                    <AlertTriangle className="h-3 w-3" />
-                    {errors.weight.message}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <Label htmlFor="measurements" className="text-gray-300">Measurements</Label>
-                <Input
-                  id="measurements"
-                  {...register('measurements')}
-                  className="bg-gray-800 border-gray-600 text-white focus:border-blue-500"
-                  placeholder="86-61-91"
-                  maxLength={50}
-                />
-                {errors.measurements && (
-                  <p className="text-red-400 text-sm mt-1 flex items-center gap-1">
-                    <AlertTriangle className="h-3 w-3" />
-                    {errors.measurements.message}
-                  </p>
-                )}
-              </div>
-            </div>
+          {/* ---------- RIGHT COLUMN ---------- */}
+          <div className="space-y-6">
+            <InputField name="height"   label="HEIGHT"    required />
+            <InputField name="chest"    label="CHEST"     required />
+            <InputField name="waist"    label="WAIST"     required />
+            <InputField name="hips"     label="HIPS"      required />
+            <InputField name="shoes"    label="SHOES"     required />
+            <InputField name="inseam"   label="INSEAM"    required />
+            <InputField name="hair"     label="HAIR"      required />
+            <InputField name="eyes"     label="EYES"      required />
+            <InputField name="ethnicity" label="ETHNICITY" required />
+            <TextArea   name="bio"      label="SHORT BIO" required rows={4} />
+            <FileInput  name="files"    label="UPLOAD YOUR DIGITALS"
+              accept=".jpg,.jpeg"
+              maxFiles={8}
+              maxSize={5 * 1024 * 1024}   /* 5 MB */
+            />
+            <SubmitButton />
           </div>
-
-          {/* Portfolio URLs */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-light text-white border-b border-gray-700 pb-2">
-              Portfolio Links
-            </h3>
-            
-            {portfolioUrls.map((url, index) => (
-              <div key={index} className="flex gap-2">
-                <Input
-                  value={url}
-                  onChange={(e) => updatePortfolioUrl(index, e.target.value)}
-                  className="bg-gray-800 border-gray-600 text-white focus:border-blue-500 flex-1"
-                  placeholder="https://your-portfolio-link.com"
-                />
-                {portfolioUrls.length > 1 && (
-                  <Button
-                    type="button"
-                    onClick={() => removePortfolioUrl(index)}
-                    variant="outline"
-                    size="sm"
-                    className="border-red-600 text-red-400 hover:bg-red-900"
-                  >
-                    Remove
-                  </Button>
-                )}
-              </div>
-            ))}
-            
-            <Button
-              type="button"
-              onClick={addPortfolioUrl}
-              variant="outline"
-              size="sm"
-              className="border-gray-600 text-gray-300 hover:bg-gray-800"
-              disabled={portfolioUrls.length >= 10}
-            >
-              Add Portfolio Link
-            </Button>
-            
-            {errors.portfolio_urls && (
-              <p className="text-red-400 text-sm flex items-center gap-1">
-                <AlertTriangle className="h-3 w-3" />
-                {errors.portfolio_urls.message}
-              </p>
-            )}
-          </div>
-
-          {/* Experience */}
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="experience" className="text-gray-300">Experience</Label>
-              <Textarea
-                id="experience"
-                {...register('experience')}
-                className="bg-gray-800 border-gray-600 text-white focus:border-blue-500 min-h-[100px]"
-                placeholder="Tell us about your modeling experience, previous work, or why you're interested in modeling..."
-                maxLength={1000}
-              />
-              {errors.experience && (
-                <p className="text-red-400 text-sm mt-1 flex items-center gap-1">
-                  <AlertTriangle className="h-3 w-3" />
-                  {errors.experience.message}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <Label htmlFor="additional_info" className="text-gray-300">Additional Information</Label>
-              <Textarea
-                id="additional_info"
-                {...register('additional_info')}
-                className="bg-gray-800 border-gray-600 text-white focus:border-blue-500 min-h-[100px]"
-                placeholder="Any additional information you'd like to share..."
-                maxLength={2000}
-              />
-              {errors.additional_info && (
-                <p className="text-red-400 text-sm mt-1 flex items-center gap-1">
-                  <AlertTriangle className="h-3 w-3" />
-                  {errors.additional_info.message}
-                </p>
-              )}
-            </div>
-          </div>
-
-          <Button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3"
-          >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Submitting Application...
-              </>
-            ) : (
-              'Submit Application'
-            )}
-          </Button>
         </form>
       </CardContent>
     </Card>

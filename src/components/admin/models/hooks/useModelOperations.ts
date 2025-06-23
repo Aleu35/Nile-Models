@@ -1,12 +1,28 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { ModelFormData } from '../ModelFormData';
 
+interface Model {
+  id: string;
+  name: string;
+  category: string;
+  bio?: string;
+  is_featured?: boolean;
+  profile_image_url?: string;
+  portfolio_images?: string[];
+  social_instagram?: string;
+  social_facebook?: string;
+  social_twitter?: string;
+  social_tiktok?: string;
+  height?: number;
+  measurements?: string;
+  experience_level?: string;
+}
+
 export const useModelOperations = (refetch: () => void) => {
   const { toast } = useToast();
 
-  const handleRemovePortfolioImage = async (editingModel: any, setEditingModel: (model: any) => void, imageUrl: string) => {
+  const handleRemovePortfolioImage = async (editingModel: Model | null, setEditingModel: (model: Model | null) => void, imageUrl: string) => {
     if (!editingModel) return;
 
     try {
@@ -56,7 +72,7 @@ export const useModelOperations = (refetch: () => void) => {
   const handleSubmit = async (
     e: React.FormEvent,
     formData: ModelFormData,
-    editingModel: any,
+    editingModel: Model | null,
     resetForm: () => void,
     profileImageFile?: File | null,
     portfolioFiles?: File[],

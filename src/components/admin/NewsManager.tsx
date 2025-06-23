@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,11 +10,23 @@ import { useNews } from '@/hooks/useNews';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
+interface Article {
+  id: string;
+  title: string;
+  excerpt: string;
+  content?: string;
+  author: string;
+  image_url?: string;
+  is_published: boolean;
+  created_at?: string;
+  updated_at?: string;
+}
+
 const NewsManager = () => {
   const { data: articles, isLoading, refetch } = useNews();
   const { toast } = useToast();
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [editingArticle, setEditingArticle] = useState<any>(null);
+  const [editingArticle, setEditingArticle] = useState<Article | null>(null);
   const [formData, setFormData] = useState({
     title: '',
     excerpt: '',
@@ -38,7 +49,7 @@ const NewsManager = () => {
     setIsFormOpen(false);
   };
 
-  const handleEdit = (article: any) => {
+  const handleEdit = (article: Article) => {
     setEditingArticle(article);
     setFormData({
       title: article.title || '',
