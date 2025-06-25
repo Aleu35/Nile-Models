@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Instagram, Mail, Phone, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -57,18 +56,6 @@ const Footer: React.FC = () => {
               >
                 Talent
               </Link>
-            </div>
-          </div>
-          
-          {/* Column 3: Services offered */}
-          <div>
-            <h4 className="font-semibold mb-4">Services</h4>
-            {/* List of services - you can modify these to match your offerings */}
-            <div className="space-y-2 text-gray-400 text-sm">
-              <div>Model Management</div>
-              <div>Casting Services</div>
-              <div>Brand Partnerships</div>
-              <div>Career Development</div>
             </div>
           </div>
           
