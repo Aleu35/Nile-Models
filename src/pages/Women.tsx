@@ -2,16 +2,12 @@ import React from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import ModelGrid from '@/components/ModelGrid';
 import { ShootingStars } from "@/components/ui/shooting-stars";
+import { SparklesCore } from "@/components/ui/sparkles";
 
-const Women = () => {
+export default function Women() {
   return (
-    <div className="relative min-h-screen">
-      <ShootingStars className="z-0" />
-      <MainLayout>
-        <ModelGrid category="women" title="Women Models" />
-      </MainLayout>
-    </div>
+    <MainLayout>
+      <ModelGrid category="women" title="Women Models" />
+    </MainLayout>
   );
-};
-
-export default Women;
+}
